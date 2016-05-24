@@ -67,7 +67,7 @@
 </div>
 <%--图片--%>
 
-<img src="../images/img2.jpg" alt="无法显示图片" class="img-rounded" height="150" width="100%">
+<%--<img src="../images/img2.jpg" alt="无法显示图片" class="img-rounded" height="150" width="100%">--%>
 
 <!-- 中部会员信息管理 -->
 <div class="container" id="LG">

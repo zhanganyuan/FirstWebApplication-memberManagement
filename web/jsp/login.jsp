@@ -11,7 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>会员积分管理系统</title>
 
-    <%--<%@include file="Base/head.jsp" %>--%>
+    <%@include file="Base/head.jsp" %>
     <link href="../css/my-style.css" rel="stylesheet">
 
     <%--<link href="http://www.francescomalagrino.com/BootstrapPageGenerator/3/css/bootstrap-combined.min.css" rel="stylesheet" media="screen">--%>
@@ -43,9 +43,9 @@
         <div class="control-group">
             <div class="controls">
                 <label class="checkbox">
-                    <input type="checkbox">记住用户名和密码
+                    <small> <input type="checkbox">记住用户名和密码</small>
                 </label>
-                <button type="submit" class="btn btn-large btn-primary">登录</button>
+                <button type="submit" class="btn btn-large btn-primary" align="right">登录</button>
             </div>
         </div>
     </form>
@@ -53,8 +53,8 @@
 
 
 </body>
-<%--<%@include file="Base/foot.jsp" %>--%>
-<script type="text/javascript" src="http://www.francescomalagrino.com/BootstrapPageGenerator/3/js/jquery-2.0.0.min.js"></script>
-<script type="text/javascript" src="http://www.francescomalagrino.com/BootstrapPageGenerator/3/js/jquery-ui"></script>
-<script type="text/javascript" src="http://www.francescomalagrino.com/BootstrapPageGenerator/3/js/bootstrap.min.js"></script>
+<%@include file="Base/foot.jsp" %>
+<%--<script type="text/javascript" src="http://www.francescomalagrino.com/BootstrapPageGenerator/3/js/jquery-2.0.0.min.js"></script>--%>
+<%--<script type="text/javascript" src="http://www.francescomalagrino.com/BootstrapPageGenerator/3/js/jquery-ui"></script>--%>
+<%--<script type="text/javascript" src="http://www.francescomalagrino.com/BootstrapPageGenerator/3/js/bootstrap.min.js"></script>--%>
 </html>
