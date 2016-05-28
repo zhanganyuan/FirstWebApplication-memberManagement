@@ -7,10 +7,10 @@ public class Customer {
     private String idCard;
     private String name;
     private String phone;
-    private double consumption;
-    private int points;
-    private int level;
-    private double totalDiscount;
+    private double consumption;//
+    private int points;//
+    private int level;//
+    private double totalDiscount;//
     private String c_password;
     private double money;
 
@@ -96,7 +96,7 @@ public class Customer {
         return money;
     }
 
-    public void setMoney(double money) {
+    public void setMoney(Double money) {
         this.money = money;
     }
 

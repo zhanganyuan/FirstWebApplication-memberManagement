@@ -30,7 +30,7 @@ public class SaleDao {
     /**
      * update 修改会员等级权限
      */
-    public static void updatesale(Sale sale) throws SQLException {
+    public static void updateSale(Sale sale) throws SQLException {
         Connection connection=DBUtil.getConnection();
         String sql=" "+
                 " UPDATE sale "+

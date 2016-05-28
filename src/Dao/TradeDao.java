@@ -22,7 +22,7 @@ public class TradeDao {
         String sql = "" +
                 " INSERT INTO trade " +
                 " (t_id, t_name, t_price) " +
-                " VALUES(DELETE,?,?) ";
+                " VALUES(DEFAULT,?,?) ";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         preparedStatement.setString(1, trade.getT_name());
         preparedStatement.setDouble(2, trade.getT_price());
@@ -76,6 +76,24 @@ public class TradeDao {
             trades.add(trade);
         }
         return trades;
+    }
+
+    public static Trade query(String t_name) throws SQLException {
+        Connection connection=DBUtil.getConnection();
+        String sql=""+
+                " SELECT * FROM trade "+
+                " WHERE t_name=? ";
+        PreparedStatement preparedStatement=connection.prepareStatement(sql);
+        preparedStatement.setString(1,t_name);
+        ResultSet resultSet=preparedStatement.executeQuery();
+        if (resultSet.next()){
+            Trade trade=new Trade();
+            trade.setT_id(resultSet.getInt("t_id"));
+            trade.setT_name(resultSet.getString("t_name"));
+            trade.setT_price(resultSet.getDouble("t_price"));
+            return trade;
+        }
+        else return null;
     }
 
 

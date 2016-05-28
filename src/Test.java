@@ -1,4 +1,5 @@
-import Dao.SupervisorDao;
+import control.CustomerAction;
+import module.Customer;
 
 import java.sql.SQLException;
 
@@ -13,7 +14,7 @@ public class Test {
 //        Map<String, Object> map = new HashMap<String, Object>();
 //        List<Map<String, Object>> params = new ArrayList<Map<String, Object>>();
 //
-//        String name = "name";
+//        String name = "";
 //        String relation = "like";
 //        String value = "1";
 //        map.put("name", "phone");
@@ -27,6 +28,20 @@ public class Test {
         /**
          * 测试supervisor
          */
-        SupervisorDao.query();
+//        SupervisorDao.query();
+        /**
+         * 测试修改客户信息
+         */
+        CustomerAction customerAction=new CustomerAction();
+        Customer customer =new Customer();
+        customer.setC_password("123344");
+        customer.setPhone("12345678901");
+
+        customer.setMoney(243324.35);
+        customer.setName("小美");
+        customer.setIdCard("421127198709211267");
+        customerAction.editCustomer(customer);
+
+
     }
 }

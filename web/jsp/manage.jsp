@@ -48,8 +48,8 @@
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li class="active"><a href="#ad-carousel">会员开卡</a></li>
-                <li><a href="#summary-container">会员信息</a></li>
+                <li class="active"><a href="#" data-toggle="modal" data-target="#activeACard-module">会员开卡</a></li>
+                <li><a href="#feature-tab" data-tab="tab-customerInfo">会员信息</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">管理操作<span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
@@ -66,8 +66,8 @@
     </div>
 </div>
 <%--图片--%>
-
-<img src="../images/img2.jpg" alt="无法显示图片" class="img-rounded" height="150" width="100%">
+<%--其实加图片并不好看，没有找到合适的图片吧--%>
+<%--<img src="../images/img2.jpg" alt="无法显示图片" class="img-rounded" height="150" width="100%">--%>
 
 <!-- 中部会员信息管理 -->
 <div class="container" id="LG">
@@ -90,15 +90,16 @@
                     <input name="name" class="input-medium search-query" type="text" placeholder="姓名"/>
                     <input name="phone" class="input-medium search-query" type="text" placeholder="手机号"/>
                     <button type="submit" class="btn">查找</button>
+                    <a href="#" data-toggle="modal" data-target="#activeACard-module" class="pull-right">会员开卡</a>
                 </form>
                 <!-- 表格框 -->
                 <table class="table table-hover">
                     <thead>
                     <tr>
-                        <th>
-                            <input type="checkbox" value="checkAll">
-                            全选
-                        </th>
+                        <%--<th>--%>
+                            <%--<input type="checkbox" value="checkAll">--%>
+                            <%--全选--%>
+                        <%--</th>--%>
                         <th>
                             身份证号
                         </th>
@@ -124,7 +125,10 @@
                             余额(元)
                         </th>
                         <th>
-                            操作
+                            修改
+                        </th>
+                        <th>
+                            删除
                         </th>
                     </tr>
                     </thead>
@@ -135,30 +139,40 @@
                         List<Customer> customers = null;
                         if (request.getParameter("name") != null) {
                             List<Map<String, Object>> params = new ArrayList<Map<String, Object>>();
-                            Map<String, Object> map = new HashMap<String, Object>();
+                            Map<String, Object> map =null;
                             String name = request.getParameter("name");
                             String idCard = request.getParameter("idCard");
                             String phone = request.getParameter("phone");
+                            /**
+                             * 此处特别注意！！！！
+                             * 因为ArrayList是个引用类型，所以每次被add的map都必须重新new一下
+                             * 不然之前被引用的也会一起改变
+                             * 以后吸取教训
+                             */
                             if (!name.equals("")) {
+                                map=new HashMap<String, Object>();
                                 map.put("name", "name");
                                 map.put("relation", "like");
                                 String nameValue = "\'%" + name + "%\'";
                                 map.put("value", nameValue);
+                                params.add(map);
                             }
                             if (!idCard.equals("")) {
+                                map=new HashMap<String, Object>();
                                 map.put("name", "idCard");
                                 map.put("relation", "like");
                                 String idCardValue = "\'%" + idCard + "%\'";
                                 map.put("value", idCardValue);
+                                params.add(map);
                             }
                             if (!phone.equals("")) {
+                                map=new HashMap<String, Object>();
                                 map.put("name", "phone");
                                 map.put("relation", "like");
                                 String phoneValue = "\'%" + phone + "%\'";
                                 map.put("value", phoneValue);
+                                params.add(map);
                             }
-
-                            params.add(map);
                             try {
                                 customers = customerAction.query(params);
                             } catch (SQLException e) {
@@ -175,7 +189,7 @@
                                 customers
                                 ) {
                             out.write("<tr>");
-                            out.write("<td><input type=\"checkbox\" value=\"checkAll\"></td>");
+//                            out.write("<td><input type=\"checkbox\" value=\"checkAll\"></td>");
                             out.write("<td>" + customer.getIdCard() + "</td>");
                             out.write("<td>" + customer.getName() + "</td>");
                             out.write("<td>" + customer.getPhone() + "</td>");
@@ -189,34 +203,52 @@
 //                                    "<input type=\"submit\" value=\"修改会员信息\"/>\n" +
 //                                    "</from>");
                     %>
+                    <%--下拉按钮不好看--%>
+                    <%--<td>--%>
+                    <%--<div class="btn-group">--%>
+                    <%--<button class="btn dropdown-toggle" data-toggle="dropdown">--%>
+                    <%--修改/删除--%>
+                    <%--<span class="caret"></span>--%>
+                    <%--</button>--%>
+                    <%--<ul class="dropdown-menu">--%>
+                    <%--<li>--%>
+                    <%--<form action="editCustomerPage.jsp" method="post"--%>
+                    <%--class="editCustomerInfo-submit">--%>
+                    <%--<input name="idCardEdit" value="<%=customer.getIdCard()%>" type="text"--%>
+                    <%--class="hidden">--%>
+                    <%--<input name="nameEdit" value="<%=customer.getName()%>" type="text"--%>
+                    <%--class="hidden">--%>
+                    <%--<a href="#" data-toggle="modal" data-target="#editCustomer-modal">--%>
+                    <%--<input type="submit" value="修改信息">--%>
+                    <%--</a>--%>
+                    <%--</form>--%>
+                    <%--</li>--%>
+                    <%--<li>--%>
+                    <%--<form action="deleteCustomer.jsp" method="post">--%>
+                    <%--<input name="idCardDelete" value="<%=customer.getIdCard()%>" type="text"--%>
+                    <%--class="hidden">--%>
+                    <%--<input type="submit" value="删除信息">--%>
+                    <%--</form>--%>
+                    <%--</li>--%>
+                    <%--</ul>--%>
+                    <%--</div>--%>
+                    <%--</td>--%>
+
                     <td>
-                        <div class="btn-group">
-                            <button class="btn dropdown-toggle" data-toggle="dropdown">
-                                修改/删除
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <form action="editCustomerInnerPage.jsp" method="post"
-                                          class="editCustomerInfo-submit">
-                                        <input name="idCardEdit" value="<%=customer.getIdCard()%>" type="text"
-                                               class="hidden">
-                                        <input name="nameEdit" value="<%=customer.getName()%>" type="text"
-                                               class="hidden">
-                                        <a href="#" data-toggle="modal" data-target="#editCustomer-modal">
-                                            <input type="submit" value="修改信息">
-                                        </a>
-                                    </form>
-                                </li>
-                                <li>
-                                    <form action="deleteCustomer.jsp" method="post">
-                                        <input name="idCardDelete" value="<%=customer.getIdCard()%>" type="text"
-                                               class="hidden">
-                                        <input type="submit" value="删除信息">
-                                    </form>
-                                </li>
-                            </ul>
-                        </div>
+                        <a href="#" data-toggle="modal" data-target="#editCustomer-modal">
+                            <input type="submit" value="修改" class="editCustomerInfoButton">
+                            <input name="idCardEdit" value="<%=customer.getIdCard()%>" type="text"
+                                   class="hidden">
+                            <input name="nameEdit" value="<%=customer.getName()%>" type="text"
+                                   class="hidden">
+                        </a>
+                    </td>
+                    <td>
+                        <form action="deleteCustomer.jsp" method="post">
+                            <input name="idCardDelete" value="<%=customer.getIdCard()%>" type="text"
+                                   class="hidden">
+                            <input type="submit" value="删除">
+                        </form>
                     </td>
 
                     <%
@@ -272,7 +304,10 @@
                             管理员密码
                         </th>
                         <th>
-                            操作
+                            修改
+                        </th>
+                        <th>
+                            删除
                         </th>
                     </tr>
                     </thead>
@@ -292,29 +327,44 @@
                             out.write("<td>" + supervisor.getManager() + "</td>");
                             out.write("<td>" + supervisor.getPassword() + "</td>");
                     %>
+                    <%--下拉按钮并不美观--%>
+                    <%--<td>--%>
+                    <%--<div class="btn-group">--%>
+                    <%--<button class="btn dropdown-toggle" data-toggle="dropdown">--%>
+                    <%--修改/删除--%>
+                    <%--<span class="caret"></span>--%>
+                    <%--</button>--%>
+                    <%--<ul class="dropdown-menu">--%>
+                    <%--<li>--%>
+                    <%--<form action="editSupervisor.jsp" method="post">--%>
+                    <%--<input name="midEdit" value="<%=supervisor.getMid()%>" type="text"--%>
+                    <%--class="hidden">--%>
+                    <%--<input type="submit" value="修改管理员信息">--%>
+                    <%--</form>--%>
+                    <%--</li>--%>
+                    <%--<li>--%>
+                    <%--<form action="deleteCustomer.jsp" method="post">--%>
+                    <%--<input name="midDelete" value="<%=supervisor.getMid()%>" type="text"--%>
+                    <%--class="hidden">--%>
+                    <%--<input type="submit" value="删除管理员信息">--%>
+                    <%--</form>--%>
+                    <%--</li>--%>
+                    <%--</ul>--%>
+                    <%--</div>--%>
+                    <%--</td>--%>
                     <td>
-                        <div class="btn-group">
-                            <button class="btn dropdown-toggle" data-toggle="dropdown">
-                                修改/删除
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <form action="editSupervisor.jsp" method="post">
-                                        <input name="midEdit" value="<%=supervisor.getMid()%>" type="text"
-                                               class="hidden">
-                                        <input type="submit" value="修改管理员信息">
-                                    </form>
-                                </li>
-                                <li>
-                                    <form action="deleteCustomer.jsp" method="post">
-                                        <input name="midDelete" value="<%=supervisor.getMid()%>" type="text"
-                                               class="hidden">
-                                        <input type="submit" value="删除管理员信息">
-                                    </form>
-                                </li>
-                            </ul>
-                        </div>
+                        <a href="#" data-toggle="modal" data-target="#editSupervisor-module">
+                            <input type="submit" value="修改" class="editSupervisorInfoButton">
+                            <input name="midEdit" value="<%=supervisor.getMid()%>" type="text"
+                                   class="hidden">
+                        </a>
+                    </td>
+                    <td>
+                        <form action="deleteSupervisor.jsp" method="post">
+                            <input name="midDelete" value="<%=supervisor.getMid()%>" type="text"
+                                   class="hidden">
+                            <input type="submit" value="删除">
+                        </form>
                     </td>
 
                     <%
@@ -371,7 +421,7 @@
                             该等级积分上限(超过上限，会员等级上升）
                         </th>
                         <th>
-                            操作
+                            修改
                         </th>
                     </tr>
                     </thead>
@@ -392,32 +442,13 @@
                             out.write("<td>" + sale.getIncPoints() + "</td>");
                             out.write("<td>" + sale.getTotalDiscount() + "</td>");
                     %>
-
-                    <%--//修改ing--%>
-                    <%--<td>--%>
-                    <%--<div class="btn-group">--%>
-                    <%--<button class="btn dropdown-toggle" data-toggle="dropdown">--%>
-                    <%--修改/删除--%>
-                    <%--<span class="caret"></span>--%>
-                    <%--</button>--%>
-                    <%--<ul class="dropdown-menu">--%>
-                    <%--<li>--%>
-                    <%--<form action="editSupervisor.jsp" method="post">--%>
-                    <%--<input name="midEdit" value="<%=supervisor.getMid()%>" type="text"--%>
-                    <%--class="hidden">--%>
-                    <%--<input type="submit" value="修改管理员信息">--%>
-                    <%--</form>--%>
-                    <%--</li>--%>
-                    <%--<li>--%>
-                    <%--<form action="deleteCustomer.jsp" method="post">--%>
-                    <%--<input name="midDelete" value="<%=supervisor.getMid()%>" type="text"--%>
-                    <%--class="hidden">--%>
-                    <%--<input type="submit" value="删除管理员信息">--%>
-                    <%--</form>--%>
-                    <%--</li>--%>
-                    <%--</ul>--%>
-                    <%--</div>--%>
-                    <%--</td>--%>
+                    <td>
+                        <a href="#" data-toggle="modal" data-target="#editSale-module">
+                            <input type="submit" value="修改" class="editSaleInfoButton">
+                            <input name="levelEdit" value="<%=sale.getLevel()%>" type="text"
+                                   class="hidden">
+                        </a>
+                    </td>
 
                     <%
                             out.write("</tr>");
@@ -445,7 +476,13 @@
                             消费金额
                         </th>
                         <th>
-                            操作
+                            修改
+                        </th>
+                        <th>
+                            删除
+                        </th>
+                        <th>
+                            <a href="#" data-toggle="modal" data-target="#addATrade-module">添加</a>
                         </th>
                     </tr>
                     </thead>
@@ -491,6 +528,20 @@
                     <%--</ul>--%>
                     <%--</div>--%>
                     <%--</td>--%>
+                    <td>
+                        <a href="#" data-toggle="modal" data-target="#editTrade-module">
+                            <input type="submit" value="修改" class="editTradeInfoButton">
+                            <input name="t_idEdit" value="<%=trade.getT_id()%>" type="text"
+                                   class="hidden">
+                        </a>
+                    </td>
+                    <td>
+                        <form action="deleteTrade.jsp" method="post">
+                            <input type="submit" value="删除">
+                            <input name="t_idDelete" value="<%=trade.getT_id()%>" type="text"
+                                   class="hidden">
+                        </form>
+                    </td>
 
                     <%
                             out.write("</tr>");
@@ -549,14 +600,14 @@
                     <!-- 参数无法传递进来 -->
                     <div class="control-group">
                         <div class="controls">
-                            <input disabled class=" input-block-level" type="text" id="editCustomerName"
-                                   placeholder="<%=request.getParameter("nameEdit")%>" name="editCustomerName"/>
+                            <input class=" input-block-level hidden" type="text" id="editCustomerIdCard"
+                                   name="editCustomerIdCard"/>
                         </div>
                     </div>
                     <div class="control-group">
                         <div class="controls">
-                            <input disabled class=" input-block-level" type="text" id="editCustomerIdCard"
-                                   placeholder="<%=request.getParameter("idCardEdit")%>" name="editCustomerIdCard"/>
+                            <input disabled class=" input-block-level " type="text" id="editCustomerName"
+                                   name="editCustomerName"/>
                         </div>
                     </div>
                     <div class="control-group">
@@ -595,9 +646,268 @@
 </div>
 
 
+<%--会员卡卡--%>
+<div class="modal fade" id="activeACard-module" tabindex="-1" role="dialog" aria-labelledby="modal-label"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span
+                        aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                <h4 class="modal-title" id="activeACard-module-label">会员开卡</h4>
+            </div>
+            <div class="modal-body">
+
+                <!-- 开卡信息 -->
+                <form class="form-horizontal form-signin" action="activeCardBack.jsp" method="post" name="regFrom">
+                    <div class="control-group">
+                        <div class="controls">
+                            <input class=" input-block-level" type="text" id="addCustomerIdCard" placeholder="身份证号"
+                                   name="addCustomerIdCard"/>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="controls">
+                            <input class=" input-block-level " type="text" id="addCustomerName" placeholder="姓名"
+                                   name="addCustomerName"/>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="controls">
+                            <input class=" input-block-level" type="text" id="addCustomerPhone" placeholder="手机号"
+                                   name="addCustomerPhone"/>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <div class="controls">
+                            <input class=" input-block-level" type="text" id="addCustomerPassword" placeholder="密码"
+                                   name="addCustomerPassword"/>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="controls">
+                            <input class=" input-block-level" type="text" id="addCustomerMoney" placeholder="金额"
+                                   name="addCustomerMoney"/>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="controls">
+                            <button type="submit" class="btn btn-large btn-primary">确定开卡</button>
+                        </div>
+                    </div>
+                </form>
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- 修改管理员信息 -->
+<div class="modal fade" id="editSupervisor-module" tabindex="-1" role="dialog" aria-labelledby="modal-label"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span
+                        aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                <h4 class="modal-title" id="editSupervisor-module-label">修改管理员信息</h4>
+            </div>
+            <div class="modal-body">
+
+                <!-- 管理员信息 -->
+                <form class="form-horizontal form-signin" action="editSupervisor.jsp" method="post" name="regFrom">
+                    <div class="control-group">
+                        <div class="controls">
+                            <input class=" input-block-level" type="text" id="editSupervisorName" placeholder="管理员姓名"
+                                   name="editSupervisorName"/>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="controls">
+                            <input class=" input-block-level " type="text" id="editSupervisorPassword"
+                                   placeholder="管理员密码"
+                                   name="editSupervisorPassword"/>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="controls">
+                            <input class=" input-block-level hidden" type="text" id="editSupervisorMid"
+                                   name="editSupervisorMid"/>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="controls">
+                            <button type="submit" class="btn btn-large btn-primary">确认修改</button>
+                        </div>
+                    </div>
+                </form>
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+<%--修改积分等级信息--%>
+<div class="modal fade" id="editSale-module" tabindex="-1" role="dialog" aria-labelledby="modal-label"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span
+                        aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                <h4 class="modal-title" id="editSale-module-label">修改信积分策略</h4>
+            </div>
+            <div class="modal-body">
+
+                <!-- 积分策略信息 -->
+                <form class="form-horizontal form-signin" action="editSale.jsp" method="post" name="regFrom">
+                    <div class="control-group">
+                        <div class="controls">
+                            <%--不可编辑的积分等级--%>
+                            <input class="uneditable-input input-block-level" type="text" id="editSaleLevel"
+                                   name="editSaleLevel"/>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="controls">
+                            <input class=" input-block-level " type="text" id="editSaleDiscount"
+                                   placeholder="会员等级折扣(消费额*this)"
+                                   name="editSaleDiscount"/>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="controls">
+                            <input class=" input-block-level" type="text" id="editSaleIncPoints"
+                                   placeholder="消费获得积分(消费额/this)"
+                                   name="editSaleIncPoints"/>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="controls">
+                            <input class=" input-block-level" type="text" id="editSaleTotalDiscount"
+                                   placeholder="积分上限"
+                                   name="editSaleTotalDiscount"/>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="controls">
+                            <button type="submit" class="btn btn-large btn-primary">确认修改</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+<%--修改商品交易--%>
+<div class="modal fade" id="editTrade-module" tabindex="-1" role="dialog" aria-labelledby="modal-label"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span
+                        aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                <h4 class="modal-title" id="editTrade-module-label">修改商品销售项目</h4>
+            </div>
+            <div class="modal-body">
+
+                <!-- 商品销售信息 -->
+                <form class="form-horizontal form-signin" action="editTrade.jsp" method="post" name="regFrom">
+                    <div class="control-group">
+                        <div class="controls">
+                            <input class="uneditable-input input-block-level" type="text" id="editTradeT_id"
+                                   name="editTradeT_id"/>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="controls">
+                            <input class=" input-block-level " type="text" id="editTradeT_name"
+                                   placeholder="消费名称"
+                                   name="editTradeT_name"/>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="controls">
+                            <input class=" input-block-level" type="text" id="editTradeT_price"
+                                   placeholder="消费金额"
+                                   name="editTradeT_price"/>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="controls">
+                            <button type="submit" class="btn btn-large btn-primary">确认修改</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%--添加销售物品--%>
+<div class="modal fade" id="addATrade-module" tabindex="-1" role="dialog" aria-labelledby="modal-label"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span
+                        aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                <h4 class="modal-title" id="addATrade-module-label">添加商品销售项目</h4>
+            </div>
+            <div class="modal-body">
+
+                <!-- 商品销售信息 -->
+                <form class="form-horizontal form-signin" action="addTrade.jsp" method="post" name="regFrom">
+                    <div class="control-group">
+                        <div class="controls">
+                            <input class=" input-block-level " type="text" id="addTradeT_name"
+                                   placeholder="消费名称"
+                                   name="addTradeT_name"/>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="controls">
+                            <input class=" input-block-level" type="text" id="addTradeT_price"
+                                   placeholder="消费金额"
+                                   name="addTradeT_price"/>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="controls">
+                            <button type="submit" class="btn btn-large btn-primary">确认修改</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
 </body>
 <%@include file="Base/foot.jsp" %>
 <script>
+    <%--导航栏的特性滑动--%>
     $(function () {
         $('#ad-carousel').carousel();
         $('#menu-nav .navbar-collapse a').click(function (e) {
@@ -612,6 +922,36 @@
             }
         });
     });
+    //    修改按钮弹出对话框，获得按钮的隐藏值
+    $(function () {
+        $(".editCustomerInfoButton").bind("click", function () {
+            $("#editCustomerIdCard").val($(this).next().val());
+            $("#editCustomerName").val($(this).next().next().val());
+        })
+    })
+    //    修改管理员信息弹出对话框，或得参数
+    $(function () {
+        $(".editSupervisorInfoButton").bind("click", function () {
+            $("#editSupervisorMid").val($(this).next().val());
+        })
+    })
+//    修改积分策略弹出对话框，获得参数
+    $(function(){
+        $(".editSaleInfoButton").bind("click",function(){
+            $("#editSaleLevel").val($(this).next().val());
+        })
+    })
+//    修改销售管理弹出对话框，获参数
+    $(function(){
+        $(".editTradeInfoButton").bind("click",function(){
+            $("#editTradeT_id").val($(this).next().val());
+        })
+    })
+
+
+
+
+
 </script>
 <%--<script type="text/javascript" src="http://www.francescomalagrino.com/BootstrapPageGenerator/3/js/jquery-2.0.0.min.js"></script>--%>
 <%--<script type="text/javascript" src="http://www.francescomalagrino.com/BootstrapPageGenerator/3/js/jquery-ui"></script>--%>

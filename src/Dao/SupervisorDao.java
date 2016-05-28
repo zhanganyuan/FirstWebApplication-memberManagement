@@ -62,7 +62,7 @@ public class SupervisorDao {
     public static Boolean query(String username, String password) throws SQLException {
         Connection connection = DBUtil.getConnection();
         String sql = " " +
-                " SELECT * FROM superviser " +
+                " SELECT * FROM supervisor " +
                 " WHERE manager=? AND password=? ";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         preparedStatement.setString(1, username);
@@ -77,7 +77,7 @@ public class SupervisorDao {
     public static List<Supervisor> query() throws SQLException {
         Connection connection = DBUtil.getConnection();
         String sql = " " +
-                " SELECT * FROM superviser ";
+                " SELECT * FROM supervisor ";
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery(sql);
         List<Supervisor> supervisors=new ArrayList<Supervisor>();

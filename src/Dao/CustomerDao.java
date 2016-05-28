@@ -28,7 +28,7 @@ public class CustomerDao {
         preparedStatement.setString(2, customer.getName());
         preparedStatement.setString(3,customer.getC_password());
         preparedStatement.setString(4, customer.getPhone());
-        preparedStatement.setDouble(4,customer.getMoney());
+        preparedStatement.setDouble(5,customer.getMoney());
         preparedStatement.execute();
     }
 
@@ -69,7 +69,7 @@ public class CustomerDao {
             for (Map<String,Object> map:
                     params
                     ) {
-                sb.append("AND"+" "+map.get("name")+" "+map.get("relation")+" "+map.get("value"));
+                sb.append("AND"+" "+map.get("name")+" "+map.get("relation")+" "+map.get("value")+" ");
             }
         }
         /**
@@ -99,6 +99,44 @@ public class CustomerDao {
         return customers;
     }
 
+    public static boolean query(String Phone,String password) throws SQLException {
+        Connection connection=DBUtil.getConnection();
+        String sql=""+
+                " SELECT * FROM customer "+
+                " WHERE phone=? AND c_password=? ";
+        PreparedStatement preparedStatement=connection.prepareStatement(sql);
+        preparedStatement.setString(1,Phone);
+        preparedStatement.setString(2,password);
+        ResultSet resultSet=preparedStatement.executeQuery();
+        if(resultSet.next())
+            return true;
+        return false;
+    }
+
+    public static Customer query(String idCard) throws SQLException {
+        Connection connection= DBUtil.getConnection();
+        String sql=""+
+                " SELECT * FROM customer "+
+                " WHERE idCard=? ";
+        PreparedStatement preparedStatement=connection.prepareStatement(sql);
+        preparedStatement.setString(1,idCard);
+        ResultSet resultSet=preparedStatement.executeQuery();
+        if(resultSet.next()){
+            Customer customer=new Customer();
+            customer.setTotalDiscount(resultSet.getDouble("totalDiscount"));
+            customer.setPoints(resultSet.getInt("points"));
+            customer.setLevel(resultSet.getInt("level"));
+            customer.setConsumption(resultSet.getDouble("consumption"));
+            customer.setIdCard(resultSet.getString("idCard"));
+            customer.setName(resultSet.getString("name"));
+            customer.setPhone(resultSet.getString("phone"));
+            customer.setC_password(resultSet.getString("c_password"));
+            customer.setMoney(resultSet.getDouble("money"));
+            return customer;
+        }
+        return null;
+    }
+
     /**
      * update 更新会员信息
      */
@@ -106,7 +144,7 @@ public class CustomerDao {
         Connection connection = DBUtil.getConnection();
         String sql = " " +
                 " UPDATE customer " +
-                " SET idCard=?,name=?,c_password=?,phone=?,consumption=?,level=?,ponits=?,totalDiscount=?,money=? " +
+                " SET idCard=?,name=?,c_password=?,phone=?,consumption=?,level=?,points=?,totalDiscount=?,money=? " +
                 " WHERE idCard=? ";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         preparedStatement.setString(1, customer.getIdCard());

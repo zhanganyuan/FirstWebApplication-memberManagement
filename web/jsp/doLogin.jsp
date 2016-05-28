@@ -26,7 +26,7 @@
         e.printStackTrace();
     }
     if (isRight) {
-        request.getRequestDispatcher("manage.jsp").forward(request, response);
+        response.sendRedirect("manage.jsp");
     } else {
         response.sendRedirect("loginFailure.jsp");
     }

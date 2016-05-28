@@ -9,8 +9,6 @@ import module.Sale;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -42,19 +40,23 @@ public class CustomerAction {
         List<Customer> customers=CustomerDao.query(params);
         return  customers;
     }
+    public Customer query(String idCard) throws SQLException {
+        return CustomerDao.query(idCard);
+    }
     /**
      * edit 编辑会员基本信息
      */
-    public static void editCUstomer(Customer customer) throws SQLException {
+    public static void editCustomer(Customer customer) throws SQLException {
         Connection connection = DBUtil.getConnection();
         String sql = " " +
                 " UPDATE customer " +
-                " SET phone=?,c_password=? " +
+                " SET phone=?,c_password=?,money=? " +
                 " WHERE idCard=? ";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         preparedStatement.setString(1, customer.getPhone());
         preparedStatement.setString(2,customer.getC_password());
-        preparedStatement.setString(3, customer.getIdCard());
+        preparedStatement.setDouble(3,customer.getMoney());
+        preparedStatement.setString(4, customer.getIdCard());
         preparedStatement.execute();
     }
 
@@ -83,23 +85,18 @@ public class CustomerAction {
      * 消费
      */
     public void consume(String idCard,double nConsume) throws SQLException {
-        Map<String,Object> map=new HashMap<String, Object>();
-        map.put("name","idCard");
-        map.put("relation","=");
-        map.put("value",idCard);
-        List<Map<String,Object>> params=new ArrayList<Map<String, Object>>();
-        params.add(map);
-        Customer customer= (Customer) CustomerDao.query(params);//查询得到customer
+        Customer customer=CustomerDao.query(idCard);//查询得到customer
         Sale sale= SaleDao.query(customer.getLevel());//查询得到sale
         Sale upSale=SaleDao.query(customer.getLevel()+1);//上个一个等级
         /**
          * 对customer的改变做出修改
          */
-        discountMoney=nConsume*(1-sale.getTotalDiscount());
-        pointsGain=(int)(nConsume/sale.getIncPoints());
+        discountMoney=nConsume*(1-sale.getDiscount());
+        pointsGain= (int) (nConsume/sale.getIncPoints());
         customer.setPoints(customer.getPoints()+pointsGain);
         customer.setConsumption(customer.getConsumption()+nConsume*sale.getDiscount());
         customer.setTotalDiscount(customer.getTotalDiscount()+discountMoney);
+        customer.setMoney(customer.getMoney()-discountMoney);
         if((null!=upSale)&&(customer.getTotalDiscount()>upSale.getTotalDiscount())){//当上一个等级不为空，并且累计消费达到了上限
             customer.setLevel(customer.getLevel()+1);
         }
